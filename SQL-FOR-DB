@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS users_1(
+                id INTEGER PRIMARY KEY,
+                second_name VARCHAR(20),
+                first_name VARCHAR(20),
+                patronymic VARCHAR(20),
+                region_id INTEGER,
+                city_id INTEGER,
+                phone VARCHAR(12),
+                email VARCHAR(35),
+                FOREIGN KEY (region_id) REFERENCES regions(id) ON DELETE CASCADE,
+                FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE);
+
+CREATE TABLE regions (
+				id INTEGER PRIMARY KEY,
+				region_name VARCHAR(15));
+
+CREATE TABLE cities (
+				id INTEGER PRIMARY KEY,
+				region_id INT,
+				city_name VARCHAR(20),
+				FOREIGN KEY (region_id) REFERENCES regions (id)
+				ON DELETE CASCADE
+				);
+
+INSERT INTO regions (region_name)
+VALUES ("Краснодарский край"), ("Ростовская область"), ("Ставропольский край");
+
+INSERT INTO cities (region_id, city_name)
+VALUES (1, "Краснодар"), (1, "Кропоткин"), (1, "Славянск"),
+	   (2, "Ростов"), (2, "Шахты"), (2, "Батайск"),
+	   (3, "Ставрополь"), (3, "Пятигорск"), (3, "Кисловодск")
+
+
+
+INSERT INTO users (second_name, first_name, patronymic, region_id, city_id, phone, email)
+VALUES ("SALNIKOV", "SEMYON", "ALEXEEVICH", 1, 1, "+79952655825", "semensem5594@mail.ru");
