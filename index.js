@@ -1,67 +1,103 @@
+
+
 let users = document.querySelector("#users");
 let regions = document.querySelector("#regions");
 let cities = document.querySelector("#cities");
-let body = document.querySelector("body");
+const body = document.querySelector("body");
 
-async function getTable(event) {
-    let table = document.createElement('table');
-    let thead = document.createElement('thead');
-    let tbody = document.createElement('tbody');
+function closeFrom(){
+    const form = document.querySelector("#form-wrapper");
+    body.backgroundColor = "white";
+}
 
-    let response = await fetch(`http://127.0.0.1:8000/${event.target.id}`);
-    let response_obj = await response.json();
-    
-    let table_headers = Object.keys(response_obj);
-    let table_rows = Object.values(response_obj);
+
+async function insertForm(point){
+    let formWrapper = document.createElement("div");
+    let form = await fetch(`forms/${point}-form.html`).then(response=>response.text());
+    formWrapper.id = "form-wrapper";
+    formWrapper.innerHTML = form;
+    body.appendChild(formWrapper);
+    body.style.backgroundColor = "rosybrown";
+    body.style.position = "relative";
+    closeHandler = document.querySelector("#close-handler");
+    closeHandler.addEventListener('click', closeFrom);
+
+} 
+
+
+
+
+async function getTable(point) {
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    const container = document.querySelector("#table-wrapper")
+
+
+    table.id = "table";
+
 
     const existingTable = document.querySelector('#table');
-    if (existingTable) {
-        existingTable.remove(); 
-        console.log('remove') // Удаляет найденную таблицу
+    const existingButton = document.querySelector('button');
+    if (existingButton){
+        existingButton.remove();
     }
-
-    for (let i = 0; i < table_headers.length; i++){
-        let header = document.createElement('th');
-        header.textContent = table_headers[i];
-        thead.appendChild(header);
-        header.style.border = "1px solid";
-        header.style.padding = "5px";
+    if (existingTable){
+        existingTable.remove();
     }
+    
 
-    for (let i = 0; i < table_rows[0].length; i++){
-        let row = document.createElement('tr');
-        for (let j = 0; j < table_rows.length; j++){
-            let cell = document.createElement('td');
-            cell.textContent = table_rows[j][i];
-            cell.style.border = "1px solid";
-            cell.style.padding = "5px";
-            row.appendChild(cell);
+    
+    try{
+        let response = await fetch(`http://127.0.0.1:8000/${point}`);
+        if (!response.ok){
+            throw new Error(`Ошибка статуса`);
         }
-        tbody.appendChild(row);
+        let response_obj = await response.json();
+        let table_headers = Object.keys(response_obj);
+        let table_rows = Object.values(response_obj);
+        for (let i = 0; i < table_headers.length; i++){
+            let header = document.createElement('th');
+            header.className = "header-cell";
+            header.textContent = table_headers[i];
+            thead.appendChild(header);
+            
+        }
+        for (let i = 0; i < table_rows[0].length; i++){
+            let row = document.createElement('tr');
+            row.className = "table-row";
+            for (let j = 0; j < table_rows.length; j++){
+                let cell = document.createElement('td');
+                cell.className = "row-cell";
+                cell.textContent = table_rows[j][i];
+                row.appendChild(cell);
+            }
+            tbody.appendChild(row);
+        }
+
+        
+    
+        
+        button = document.createElement("button");
+        button.id = "create-button";
+        button.textContent = "Создать запись";
+        button.addEventListener('click', ()=>{insertForm(point)})
+
+        body.appendChild(container);
+        body.appendChild(button);
+        container.appendChild(table);
+        table.appendChild(thead);
+        table.appendChild(tbody);
+    } catch(error){
+
     }
-    container = document.createElement("div");
-
-    container.style.display = "flex";
-    container.style.justifyContent = "center";
-    container.style.alignItems = "center";
-    container.style.marginTop = "50px";
-    container.id = "table";
-    
-    table.style.width = "100%";
-    table.style.border = "1px solid";
-    table.style.borderCollapse = "collapse";
-
-    
-    body.appendChild(container);
-    container.appendChild(table);
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    
 
 }
 
 
 
-users.addEventListener('click', getTable);
-regions.addEventListener('click', getTable);
-cities.addEventListener('click',getTable);
+
+
+users.addEventListener('click', ()=>{getTable("users")});
+regions.addEventListener('click', ()=>{getTable("regions")});
+cities.addEventListener('click',()=>{getTable("cities")});

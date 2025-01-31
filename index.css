@@ -18,3 +18,42 @@
     cursor:pointer;
 }
 
+.header-cell {
+    border: 1px solid;
+    padding: 5px;
+}
+
+.row-cell {
+    border: 1px solid;
+    padding: 5px;
+}
+
+#table-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+
+}
+
+#table {
+    width: 100%;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+#create-button {
+    font-size: 15px;
+    margin-top: 50px;
+}
+
+#form-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    transform: translate(-50%,-50%);
+    background-color: antiquewhite;
+    border: 2px solid;
+}
