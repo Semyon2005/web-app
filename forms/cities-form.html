@@ -1,5 +1,6 @@
-<form id="cities-form">
-    <button id="close-handler"></button>
-    <label>Выберите регион <select></select></label>
-    <label>Выберите город <select></select></label>
+<form id="cities-form" action="http://127.0.0.1:8000/cities" method="post">
+    <label>Выберите регион <select id="regions_selector" name="region"></select></label>
+    <label>Выберите город  <input name="city"></label>
+    <button id="close-handler" type="button">Закрыть</button>
+    <button id="send-handler">Отправить</button>
 </form>

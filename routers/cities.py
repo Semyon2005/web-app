@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Form
 import sqlite3
 router = APIRouter()
 
 @router.get("/")
-async def get_cities(request: Request):
+async def get_cities():
     connection = sqlite3.connect('my_database.db')
     cursor = connection.cursor()
     table_name = "cities"
@@ -17,3 +17,14 @@ async def get_cities(request: Request):
     cursor.close()
     connection.close()
     return response
+
+@router.post("/")
+async def set_sity(region: str = Form(), city: str = Form()):
+    connection = sqlite3.connect('my_database.db')
+    cursor = connection.cursor()
+    cursor.execute(f"INSERT INTO cities (region_id, city_name) \
+                   VALUES ((SELECT id FROM regions WHERE region_name = '{region}'), '{city}')")
+
+    connection.commit()
+    connection.close()
+    get_cities()
