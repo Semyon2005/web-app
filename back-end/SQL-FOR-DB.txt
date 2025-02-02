@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users_1(
+CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY,
                 second_name VARCHAR(20),
                 first_name VARCHAR(20),
@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS users_1(
                 FOREIGN KEY (region_id) REFERENCES regions(id) ON DELETE CASCADE,
                 FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE CASCADE);
 
-CREATE TABLE regions (
+CREATE TABLE IF NOT EXISTS regions (
 				id INTEGER PRIMARY KEY,
 				region_name VARCHAR(15));
 
-CREATE TABLE cities (
+CREATE TABLE IF NOT EXISTS cities (
 				id INTEGER PRIMARY KEY,
 				region_id INT,
 				city_name VARCHAR(20),
@@ -28,7 +28,7 @@ VALUES ("Краснодарский край"), ("Ростовская обла�
 INSERT INTO cities (region_id, city_name)
 VALUES (1, "Краснодар"), (1, "Кропоткин"), (1, "Славянск"),
 	   (2, "Ростов"), (2, "Шахты"), (2, "Батайск"),
-	   (3, "Ставрополь"), (3, "Пятигорск"), (3, "Кисловодск")
+	   (3, "Ставрополь"), (3, "Пятигорск"), (3, "Кисловодск");
 
 
 

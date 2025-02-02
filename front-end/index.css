@@ -51,11 +51,15 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 50%;
+    width: 30%;
     height: 60%;
     transform: translate(-50%,-50%);
     background-color: antiquewhite;
     border: 2px solid;
+    border-radius: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #overlay {
@@ -68,18 +72,12 @@
     z-index: 1000;
     display: none;
 }
-
-#close-handler {
-    position: absolute;
-    bottom: 0%;
-    right: 0%;
+#form-wrapper label{
+    margin-top: 5%;
+}
+#form-wrapper div {
+    margin-top: auto;
 }
 
-form label {
-    display: block;
-    margin-bottom: 10px;
-}
 
-form select {
-    margin-left: 10px;
-}
+
