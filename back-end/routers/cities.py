@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Form
 from pydantic import BaseModel
 import sqlite3
+import json
 router = APIRouter()
 
 @router.get("/")
@@ -41,10 +42,12 @@ async def set_sity(data: CityData):
 async def del_sity(item_id: int):
     connection = sqlite3.connect('my_database.db')
     cursor = connection.cursor()
-    cursor.execute(
-        f'DELETE FROM cities \
-          WHERE id == {item_id}'
-    )
-
+    cursor.execute(f'SELECT * FROM cities WHERE id={item_id}')
+    data = cursor.fetchall()
+    cursor.execute(f'pragma table_info(cities)')
+    head = cursor.fetchall()[1]
+    for_json = {head[i]: data[i] for i in range(len(data))}
+    cursor.execute(f'DELETE FROM cities WHERE id={item_id}')
     connection.commit()
     connection.close()
+    return for_json

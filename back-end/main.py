@@ -1,5 +1,5 @@
 import sqlite3
-
+import json
 connection = sqlite3.connect('C:\\Users\\semen\\PycharmProjects\\web-app\\back-end\\my_database.db')
 
 cursor = connection.cursor()
@@ -17,7 +17,7 @@ while True:
     else:
         break
 cursor.execute(query)
-for i in cursor.fetchall():
-    print(i)
+data = json.dumps(cursor.fetchall(), ensure_ascii=False)
+print(type(data))
 connection.commit()
 connection.close()

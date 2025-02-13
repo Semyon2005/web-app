@@ -14,7 +14,7 @@ export class HtmlTable {
     }
 
     async delData(id){
-        console.log(URL);
+
         let data = await fetch(`${this.tableAddr}\\${id}`,{
             method: 'DELETE',
             headers: {
@@ -24,7 +24,15 @@ export class HtmlTable {
         });
         if (data.ok){
             data = await data.json();
-            return data;
+
+            let all = document.querySelectorAll('#table tr');
+            for (let i = 0; i < all.length; i++){
+                let cell_id = all[i].firstChild
+                if (cell_id.textContent == data[1][0]) {
+                    document.querySelector('#table tbody').removeChild(all[i]);
+                }
+
+            }
         }
             
     }
