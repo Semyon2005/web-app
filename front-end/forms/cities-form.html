@@ -1,15 +1,27 @@
-<form>
-    <label>Выберите регион <select id="regions_selector" name="region"></select></label>
-    <label>Введите город  <input name="city" required placeholder="Название города"></label>
-    <div id="1">
+    <style>
+        input:invalid {
+            border: 2px solid red;
+        }
+    </style>
+    
+    <div id="input-area-plate">
+        <label>Выберите регион <select class="input-field" name="region"></select></label>
+        <label>Введите город  <input class="input-field" name="city" required placeholder="Название города"></label>
+    </div>
+    <div id="button-plate">
         <button id="close-handler" type="button">Закрыть</button>
         <button id="send-handler" type="submit"> Отправить</button>
     </div>
+
+
+
+
+
     <script>
         async function func(){
             let regions = await fetch('http://127.0.0.1:8000/regions').then(response=>response.json());
             let regions_value = Object.values(regions);
-            let selector = document.querySelector("#regions_selector");
+            let selector = document.querySelector(".input-field");
             for (let i = 0; i < regions_value[1].length; i++){
                 option = document.createElement("option");
                 option.textContent = regions_value[1][i];
@@ -18,5 +30,4 @@
         }
         func();
     </script>
-</form>
 

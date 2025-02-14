@@ -12,7 +12,6 @@ export class HtmlTable {
             return data;
         }
     }
-
     async delData(id){
 
         let data = await fetch(`${this.tableAddr}\\${id}`,{
@@ -33,9 +32,10 @@ export class HtmlTable {
                 }
 
             }
-        }
-            
+        }       
     }
+    
+
     async buildTable(){
         //
         // Получаем основные элементы страницы и создаем необходимые для построения
@@ -48,20 +48,14 @@ export class HtmlTable {
         const container = document.querySelector("#table-wrapper")
 
         table.id = "table";
-
-        
-
-
         const existingTable = document.querySelector('#table');
-        const existingButton = document.querySelector('button');
+        const existingButton = document.querySelector('#create-button');
         if (existingButton){
             existingButton.remove();
         }
         if (existingTable){
             existingTable.remove();
      }
-    
-    
     try{
         let response_obj = await this.getData();
         let table_headers = Object.keys(response_obj);
@@ -155,66 +149,86 @@ export class HtmlTable {
 
             formWrapper.id = "form-wrapper";
             formWrapper.innerHTML = form;
-            formWrapper.querySelector('form').action = this.tableAddr;
             formWrapper.style.zIndex = "1001";
             //loadRegionsSelector();
 
             function closeForm(){
                 const form = document.querySelector("#form-wrapper");
                 const headerScript = document.head.querySelector('script');
-                headerScript.remove();
+                if (headerScript)
+                    headerScript.remove();
                 document.querySelector("#overlay").style.display = "none";
                 form.remove();
             }
              // Пробуем найти <script> в форме. Если таковые есть, отрабатываем их
-            let script = formWrapper.querySelector('script');
             
-            let newScript = document.createElement('script');
-            newScript.textContent = script.textContent;
 
     
             body.appendChild(formWrapper);
             body.style.position = "relative";
             let closeHandler = document.querySelector("#close-handler");
             closeHandler.addEventListener('click', closeForm);
-            document.head.appendChild(newScript);
-
-
             
-            this.sendData();
+
+            let script = formWrapper.querySelector('script');
+            if (script){
+                let newScript = document.createElement('script');
+                newScript.textContent = script.textContent;
+                document.head.appendChild(newScript);
+            }
+
+            document.querySelector('#send-handler').addEventListener('click', async ()=>{
+                const result = await this.sendData(this.tableAddr);
+                
+                if (result && result.ok){
+                    const info = await result.json();
+
+                    
+                    closeForm();
+                }
+
+            });
+    
+
             };
             
            
             
         }
     async sendData(){
-        document.querySelector('form').addEventListener('submit', async function(event){
-            event.preventDefault();
-            console.log('fasf');
-
-            const formData = new FormData(this);
-
-            const formObject = {};
-            formData.forEach((value, key) => {
-                formObject[key] = value;
-            });
+        const inputs = document.querySelectorAll('.input-field');
+        const data = {};
 
 
-            const jsonData = JSON.stringify(formObject);
-            
-            console.log(jsonData);
-            try {
-                const response = await fetch(event.target.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type' : 'application/json',
-                    },
-                    body: jsonData,
-                });
-            } catch (error){
-                console.error(error.textContent);
+
+        for (let i = 0; i < inputs.length; i++){
+            let input = inputs[i];
+            if (input.value.trim() === '') {
+
+                input.style.border = '2px solid red';
+                input.title = 'Поле обязательно для заполнения!';
+                input.focus();
+                const event = new MouseEvent('mouseover');
+                input.dispatchEvent(event);
+                return;
             }
+            input.title = '';
+            const key = input.name;
+            data[key] = input.value;
+        }
+        const jsonData = JSON.stringify(data);
+        const request = await fetch(this.tableAddr, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: jsonData,
         })
+        if (request.ok){
+            console.log('yes');
+            return request;
+        }
+
     }
 }
 

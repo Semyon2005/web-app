@@ -17,7 +17,9 @@ while True:
     else:
         break
 cursor.execute(query)
-data = json.dumps(cursor.fetchall(), ensure_ascii=False)
-print(type(data))
+
+for i in cursor.fetchall():
+    print(i)
+
 connection.commit()
 connection.close()
